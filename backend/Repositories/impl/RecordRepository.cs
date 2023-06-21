@@ -32,10 +32,10 @@ namespace lifecare.Repositories
         {
             var record = _context.Records.FirstOrDefault(c => c.Id == id);
         
-            _context.Records.Remove(record);
+             _context.Records.Remove(record!);
             _context.SaveChanges();
 
-            return record;
+            return record!;
         }
 
         public List<Record> GetAll()
@@ -44,16 +44,16 @@ namespace lifecare.Repositories
             return records;
         }
 
-        public Record? GetById(int id)
+        public List<Record> GetById(int id)
         {
-            var record = _context.Records.FirstOrDefault(c => c.Id == id);
+            var record = _context.Records.Where(c => c.Id == id).ToList();
             return record;
         }
 
 
-        public Record? GetByCPF(string cpf)
+        public List<Record> GetByCPF(string cpf)
         {
-           var record = _context.Records.FirstOrDefault(c => c.CPF == cpf);
+           var record = _context.Records.Where(c => c.CPF == cpf).ToList();
            return record;
         }
      }

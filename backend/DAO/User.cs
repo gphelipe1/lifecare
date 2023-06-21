@@ -1,21 +1,24 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using lifecare.Enums;
+using System.Text.Json.Serialization;
+using lifecare.Helpers;
+using Microsoft.AspNetCore.Identity;
 
-namespace lifecare.DAO;
-
-public class User 
+namespace lifecare.DAO
 {
-    [Key]
-    public int Id { get; set; }
-    
-    [Required(ErrorMessage ="This field is required")]
-    public string UserCPF { get; set; } = string.Empty;
+    public class User
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public string Role {get ; set; } = UserRoles.User;
 
-    [Required(ErrorMessage ="This field is required")]
-    public string Password { get; set; } = string.Empty;
+        [Required]
+        public string Username { get; set; } = string.Empty;
 
-    public UserRoles Role { get; set; } = UserRoles.User;
+        public string Name { get; set; } = string.Empty;
 
-
+        [Required]
+        [JsonIgnore]
+        public string Password { get; set; } = string.Empty;
+    }
 }

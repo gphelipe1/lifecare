@@ -6,9 +6,9 @@ namespace lifecare.Services
     {
         RecordDTO Create(RecordDTO dto);
         RecordDTO Update(RecordDTO record);
-        RecordDTO Delete(int id);
+        RecordDTO? Delete(int id);
         List<RecordDTO> GetAll();
-        RecordDTO? GetById(int id);
-        RecordDTO? GetByCPF(string cpf);
+        List<RecordDTO>? GetById(int id);
+        List<RecordDTO>? GetByCPF(string cpf);
     }
 }

@@ -1,14 +1,16 @@
 
-using lifecare.Data;
 using lifecare.DTO;
+using lifecare.Helpers;
 using lifecare.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace lifecare.Controllers
 {
     
-    [Route("v1/records")]
+    [Route("/api[controller]")]
     [ApiController]
+    [Authorize(Roles = UserRoles.Admin)]
     public class RecordController : ControllerBase
     {
         private readonly IRecordService _service;
@@ -51,7 +53,7 @@ namespace lifecare.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        public ActionResult<RecordDTO> Delete(int id)
+        public ActionResult<RecordDTO?> Delete(int id)
         {
             try {
 
@@ -82,7 +84,7 @@ namespace lifecare.Controllers
 
         [HttpGet]
         [Route("by-id")]
-        public ActionResult<RecordDTO> GetById(int id)
+        public ActionResult<List<RecordDTO>> GetById(int id)
         {
             try
             {
@@ -97,7 +99,7 @@ namespace lifecare.Controllers
 
         [HttpGet]
         [Route("by-cpf")]
-        public ActionResult<RecordDTO> GetByCPF(string cpf)
+        public ActionResult<List<RecordDTO>?> GetByCPF(string cpf)
         {
             try {
 
@@ -108,7 +110,6 @@ namespace lifecare.Controllers
             {
                 return BadRequest(e);
             }
-            
         }
     }
 }

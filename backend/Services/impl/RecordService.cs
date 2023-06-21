@@ -31,12 +31,17 @@ namespace lifecare.Services
             return recordDTO;
         }
 
-        public RecordDTO Delete(int id)
+        public RecordDTO? Delete(int id)
         {
             var record = _repository.Delete(id);
-            var recordDTO = _mapper.Map<Record, RecordDTO>(record);
 
-            return recordDTO;
+            if (record != null)
+            {
+                var recordDTO = _mapper.Map<Record, RecordDTO>(record);
+                return recordDTO;
+            }
+
+            return null;
         }
 
         public List<RecordDTO> GetAll()
@@ -47,7 +52,7 @@ namespace lifecare.Services
             return recordsDTO;
         }
 
-        public RecordDTO? GetById(int id)
+        public List<RecordDTO>? GetById(int id)
         {
            var record = _repository.GetById(id);
 
@@ -56,11 +61,11 @@ namespace lifecare.Services
                 return null;
             }
 
-            return _mapper.Map<Record, RecordDTO>(record);
+            return _mapper.Map<List<RecordDTO>>(record);
         }
 
 
-        public RecordDTO? GetByCPF(string cpf)
+        public List<RecordDTO>? GetByCPF(string cpf)
         {
            var record = _repository.GetByCPF(cpf);
 
@@ -69,7 +74,7 @@ namespace lifecare.Services
                 return null;
             }
 
-            return _mapper.Map<Record, RecordDTO>(record);
+            return _mapper.Map<List<RecordDTO>>(record);
         }
     }
 }
