@@ -9,6 +9,7 @@ namespace lifecare.Data
         public MappingProfile()
         {
             CreateMap<Record, RecordDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
         }
     }
 }

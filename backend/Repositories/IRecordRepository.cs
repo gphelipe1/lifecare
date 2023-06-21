@@ -6,9 +6,9 @@ namespace lifecare.Repositories
     {
         Record Create(Record record);
         Record Update(Record record);
-        Record? Delete(int id);
+        Record Delete(int id);
         List<Record> GetAll();
-        Record? GetById(int id);
-        Record? GetByCPF(string cpf);
+        List<Record> GetById(int id);
+        List<Record> GetByCPF(string cpf);
     }
 }
