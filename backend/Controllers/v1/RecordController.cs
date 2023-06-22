@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace lifecare.Controllers
 {
     
-    [Route("/api[controller]")]
+    [Route("record")]
     [ApiController]
     [Authorize(Roles = UserRoles.Admin)]
     public class RecordController : ControllerBase
