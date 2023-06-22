@@ -34,7 +34,6 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
         builder => builder.SetIsOriginAllowed((host) => true)
-            .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyOrigin()
             .WithMethods("GET", "PUT", "POST", "DELETE")
@@ -117,6 +116,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace lifecare.Controllerss
 {
-
+    [Route("user")]
+    [ApiController]
      public class UserController : ControllerBase
     {
         private readonly IUserService _service;
