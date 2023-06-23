@@ -56,5 +56,11 @@ namespace lifecare.Repositories
            var record = _context.Records.Where(c => c.CPF == cpf).ToList();
            return record;
         }
+
+        public Record? GetByUserAndRecord(string cpf, int recordId)
+        {
+            var record = _context.Records.Where(c => c.CPF == cpf && c.Id == recordId).FirstOrDefault();
+            return record;
+        }
      }
 }

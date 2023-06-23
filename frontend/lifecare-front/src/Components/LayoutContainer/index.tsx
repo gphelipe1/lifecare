@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import { Button, Layout, Menu, theme } from 'antd';
 
 import {
+  FileAddOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -13,11 +14,6 @@ import Title from 'antd/es/typography/Title';
 import { getName, isAuthenticated, logout } from '../../Services/auth';
 import { Role } from '../../Types/Usertypes';
 
-interface LayoutContainerProps
-{
-  role: Role,
-}
-
 const { Header, Sider, Content } = Layout;
 
 const LayoutContainer: React.FC = () => {
@@ -25,15 +21,32 @@ const LayoutContainer: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigateTo = useNavigate();
 
-  const auth = isAuthenticated();
+  const { auth, role } = isAuthenticated();
 
-  const menuData = [
-    {
-        key: 'home',
+  console.log(role);
+
+  const menuData = useMemo(() => {
+    const data = role === Role.Admin ? [
+      {
+          key: 'home',
+          icon: <UserOutlined />,
+          label: 'Patients Records',
+      },
+      {
+        key: 'new-admin',
+        icon: <FileAddOutlined />,
+        label: 'New Admin',
+      },
+    ] : [
+      {
+        key: 'user-home',
         icon: <UserOutlined />,
         label: 'My Records',
-    },
-  ];
+      },
+    ];
+
+    return data;
+  }, [role]);
 
   const {
     token: { colorBgContainer },
@@ -49,8 +62,8 @@ const LayoutContainer: React.FC = () => {
             title='Life Care'
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['home']}
-            items={menuData}
+            defaultSelectedKeys={ role === Role.Admin ? ['home'] : ['user-home']}
+            items={menuData || []}
             onClick = {({key}) => {
               return navigateTo(`/${key}`);
             }}

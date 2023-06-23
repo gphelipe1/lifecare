@@ -77,6 +77,14 @@ namespace lifecare.Services
             return null;
         }
 
+        public UserDTO GetByUsername(string username)
+        {
+            var user = _repository.GetByUsername(username);
+            var userDto = _mapper.Map<UserDTO>(user);
+
+            return userDto;
+        }
+
         public UserDTO? Login(UserRequestDTO userParam)
         {
             var user = _repository.GetByUsername(userParam.Username);
@@ -126,5 +134,40 @@ namespace lifecare.Services
 
             return recordsDTO;
         }
+
+        public RecordDTO GetUserRecordsDetail(string username, int recordId)
+        {
+            
+            var record = _recordRepository.GetByUserAndRecord(username, recordId);
+            var recordDTO = _mapper.Map<RecordDTO>(record);
+
+            return recordDTO;
+        }
+
+        public UserDTO GetCurrentUserProfile(string username)
+        {
+            var user = _repository.GetByUsername(username);
+            var profile = _mapper.Map<UserDTO>(user);
+
+            return profile;
+
+        }
+
+        public UserDTO Update(UserDTO dto)
+        {
+            var user = _mapper.Map<User>(dto);
+            var updated = _repository.Update(user);
+
+            return _mapper.Map<UserDTO>(updated);
+        }
+
+        public UserDTO SaveUserFile(string filename, string username)
+        {
+            var user = _repository.SaveUserFile(filename, username);
+            var userDto = _mapper.Map<UserDTO>(user);
+
+            return userDto;
+        }
+        
     }
 }

@@ -4,6 +4,7 @@ using lifecare.Helpers;
 using lifecare.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace lifecare.Controllerss
 {
@@ -24,16 +25,22 @@ namespace lifecare.Controllerss
         [AllowAnonymous]
         public IActionResult Login([FromBody] UserRequestDTO dto)
         {
-            var logged = _service.Login(dto);
-            //If username and passoword passed on DTO exists)
-            if (logged != null) {
+            try {
+                var logged = _service.Login(dto);
+                //If username and passoword passed on DTO exists)
+                if (logged != null) {
+                    
+                    return Ok(logged);
                 
-                return Ok(logged);
-            
-            }else{
-            
-                return Unauthorized("Credenciais Inválidas");
-            
+                }else{
+                
+                    return Unauthorized("Credenciais Inválidas");
+                
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
@@ -63,9 +70,9 @@ namespace lifecare.Controllerss
                 var created = _service.AdminRegistration(dto);
                 return Ok(created);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-               return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
@@ -83,18 +90,155 @@ namespace lifecare.Controllerss
                     
                     if (username != null)
                     {   
-                        var record = _service.GetUserRecords(username);
+                        var records = _service.GetUserRecords(username);
+                        return Ok(records);
+                    }
+                }
+
+                return BadRequest("Could not get the user Identity");
+            } 
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("user-records/detail")]
+        [Authorize]
+        public IActionResult RetrieveUserRecordsDetail(int recordId)
+        {
+            try {
+            
+                var identity = User?.Identity;
+                if (identity != null)
+                {
+                    var username = identity.Name;
+                    
+                    if (username != null)
+                    {   
+                        var record = _service.GetUserRecordsDetail(username, recordId);
                         return Ok(record);
                     }
                 }
 
                 return BadRequest("Could not get the user Identity");
             } 
-            catch(Exception e)
+            catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
+
+        [HttpPut("file")]
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile file, string username)
+        {
+     
+            string fileName;
+            try
+            {
+                
+                var extension = "." + file.FileName.Split('.')[^1];
+                fileName = DateTime.Now.Ticks + extension; 
+                
+                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\files");
+
+                if (!Directory.Exists(pathBuilt))
+                {
+                    Directory.CreateDirectory(pathBuilt);
+                }
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\files",
+                fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                var updateUser = _service.SaveUserFile(fileName, username);
+
+                return Ok("File Uploaded");
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("file")]
+        [Authorize(Roles = UserRoles.Admin)]
+        public IActionResult GetUserFile(string username)
+        {
+            var user = _service.GetByUsername(username);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            if (string.IsNullOrEmpty(user.ProfileImage))
+            {
+                return NotFound("File not found");
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\files", user.ProfileImage);
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("File not found");
+            }
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return new FileStreamResult(stream, "image/*");
+        }
+
+        [HttpGet("user-file")]
+        [Authorize]
+        public IActionResult GetFileFromUser()
+        {
+            try{
+                var identity = User?.Identity;
+                if (identity != null)
+                {
+                    var username = identity.Name;
+                    
+                    if (username != null)
+                    { 
+                        var user = _service.GetByUsername(username);
+
+                        if (user == null)
+                        {
+                            return NotFound("User not found");
+                        }
+
+                        if (string.IsNullOrEmpty(user.ProfileImage))
+                        {
+                            return NotFound("File not found");
+                        }
+
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\files", user.ProfileImage);
+
+                        if (!System.IO.File.Exists(filePath))
+                        {
+                            return NotFound("File not found");
+                        }
+
+                        var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                        return new FileStreamResult(stream, "image/*");
+                    }
+                } else {
+                    return NotFound("User Not Found");
+                }
+
+                return NotFound("Something wrong during the request");
+            } catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }
 

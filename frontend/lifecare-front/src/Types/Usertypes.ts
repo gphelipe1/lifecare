@@ -6,6 +6,6 @@ export enum AuthMode
 
 export enum Role
 {
-    Admin,
-    User,
+    Admin = 'Admin',
+    User = 'User',
 }

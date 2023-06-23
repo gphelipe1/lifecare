@@ -7,11 +7,14 @@ import * as Styled from './styles';
 import { RecordDetail } from "..";
 import { getUserRecords } from "../../Services/userService";
 import { useEffect, useState } from "react";
+import { isAuthenticated } from "../../Services/auth";
 import { Role } from "../../Types/Usertypes";
+import { useNavigate } from "react-router-dom";
 
 const UserHome: React.FC = () => {
- 
     const [records, setRecords] = useState<RecordType.Record[]>([]);
+
+    const navigateTo = useNavigate();
 
     const getData = async () => {
         const response = await getUserRecords();
@@ -29,7 +32,17 @@ const UserHome: React.FC = () => {
     
     useEffect(() => {
         getData();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        const { auth, role } = isAuthenticated();
+
+        if (!auth) {
+            navigateTo('/login');
+        } else if (auth && role !== Role.User) {
+            navigateTo('/home');
+        }
+    }, [navigateTo]);
 
     return (
         <div style={{
@@ -40,9 +53,6 @@ const UserHome: React.FC = () => {
                 itemLayout="horizontal"
                 dataSource={records}
                 pagination={{
-                    onChange: (page) => {
-                      console.log(page);
-                    },
                     pageSize: 3,
                   }}
                 renderItem={(item) => (
@@ -55,7 +65,7 @@ const UserHome: React.FC = () => {
                                             width: 1000,
                                             title:'Record Information',
                                             content: (
-                                                <RecordDetail />
+                                                <RecordDetail recordId={item.id} />
                                             ),
                                         });
                                     }}>

@@ -25,9 +25,9 @@ export async function getUserRecords(): Promise<any> {
     }
   }
 
-  export async function getUseRecordById(): Promise<any> {
+  export async function getUserRecordDetail(recordId: number): Promise<any> {
     try {
-      const response = await api.get("user/user-records");
+      const response = await api.get(`user/user-records/detail?recordId=${recordId}`);
       const allData: RecordType.Record[] = response.data;
   
       return allData;

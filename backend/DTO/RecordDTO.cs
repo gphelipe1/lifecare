@@ -12,8 +12,6 @@ namespace lifecare.DTO {
         public string? Address { get; set; }
 
         public string? Description { get; set; }
-
-        public IFormFile? ImageFile {get; set;}
         
         public RecordDTO(string Name, string CPF, string Phone, string? Address) {
             this.Name = Name;

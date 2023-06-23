@@ -2,14 +2,19 @@ import { Avatar, Descriptions } from "antd";
 import { RecordType } from "../../Types";
 import { UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { getUseRecordById } from "../../Services/userService";
+import { getUserRecordDetail } from "../../Services/userService";
 
-const RecordDetail: React.FC = () => {
+interface RecordDetailProps 
+{
+    recordId: number
+}
+
+const RecordDetail: React.FC<RecordDetailProps> = ({ recordId }) => {
 
     const [recordDetail, setRecordDetail] = useState<RecordType.Record>();
 
-    const getRecord = async () => {
-        const response = await getUseRecordById();
+    const getRecord = async (recordId: number) => {
+        const response = await getUserRecordDetail(recordId);
 
         if(response.has_error){
             return;
@@ -22,7 +27,7 @@ const RecordDetail: React.FC = () => {
     }
 
     useEffect(() => {
-        getRecord();
+        getRecord(recordId);
     }, []);
 
     return (

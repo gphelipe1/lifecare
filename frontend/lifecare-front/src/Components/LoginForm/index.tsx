@@ -6,6 +6,7 @@ import * as Styled from './styles';
 import { UserTypes } from '../../Types';
 import { isAuthenticated, signIn } from '../../Services/auth';
 import { useNavigate } from 'react-router-dom';
+import { Role } from '../../Types/Usertypes';
 
 interface LoginFormProps {
     setAuthMode: React.Dispatch<React.SetStateAction<UserTypes.AuthMode>>
@@ -25,11 +26,13 @@ const LoginForm: React.FC<LoginFormProps>= ({ setAuthMode }) => {
         return;
     }
     navigateTo('/home');
+
   }
 
   useEffect(() => {
-      if (isAuthenticated()) {
-          navigateTo('/home');
+    const { auth, role } = isAuthenticated();
+      if (auth) {
+          role === Role.Admin ? navigateTo('/home') : navigateTo('/userHome') ;
           window.location.reload();
       }
   // eslint-disable-next-line react-hooks/exhaustive-deps
