@@ -8,41 +8,56 @@ import {
 } from "react-router-dom";
 
 import './index.css'
-import { ErrorComponent, LayoutContainer } from './Components/index.tsx';
-import { Login, RecordDetail, UserHome } from './Pages';
+import { ErrorComponent } from './Components/index.tsx';
+import {
+  AdminHome,
+  Login,
+  UserHome } from './Pages';
+import { Role } from './Types/Usertypes.ts';
+import PrivateRoute from './privateRoute.tsx';
+import { isAuthenticated } from './Services/auth.ts';
+
+const { auth, role } = isAuthenticated();
 
 const router = createBrowserRouter([
   {
+    path: "",
+    element: <Navigate to={!auth ? "/login" : role === Role.Admin ? "/home" : "/user-home" } /> 
+  },
+  {
     path: "/",
-    element: <LayoutContainer />,
+    element: <PrivateRoute roleRequired={Role.Admin} />,
+    errorElement: <ErrorComponent />,
+    children:[
+        {
+          path: "/home",
+          element: <AdminHome />,
+        }
+    ],
+  },
+  {
+    path: "/",
+    element: <PrivateRoute roleRequired={Role.User} />,
+    errorElement: <ErrorComponent />,
     children: [
       {
-        path: "/home",
+        path: "/user-home",
         element: <UserHome />,
       },
-      {
-        path: "/record/:recordId",
-        element: <RecordDetail/>,
-      },
-      {
-        path: "*",
-        element: <Navigate to="/home" />
-      },
     ],
-    errorElement: <ErrorComponent />
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login/>,
   },
   {
     path: "*",
-    element: <Navigate to="/login" />
-  },
+    element: <ErrorComponent />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-     <RouterProvider router={router} />
+      <RouterProvider router={router} />
   </React.StrictMode>,
 )

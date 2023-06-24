@@ -21,10 +21,5 @@ namespace lifecare.DAO
         
         public string? Address { get; set; }
 
-        public string? ProfileImage { get; set;}
-        
-        [NotMapped]
-        public IFormFile? ImageFile {get; set;}
-
     }
 }

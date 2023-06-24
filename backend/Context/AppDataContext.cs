@@ -24,6 +24,7 @@ namespace lifecare.Data
                     Id=1,
                     Role= UserRoles.Admin,
                     Username="admin",
+                    Name="Admin",
                     Password = BCrypt.Net.BCrypt.HashPassword("admin")
                 });
             });

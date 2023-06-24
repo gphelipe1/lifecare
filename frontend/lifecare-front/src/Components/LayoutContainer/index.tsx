@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import { Button, Layout, Menu, theme } from 'antd';
 
@@ -12,28 +12,35 @@ import {  Navigate, Outlet, useNavigate } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
 import { getName, isAuthenticated, logout } from '../../Services/auth';
 import { Role } from '../../Types/Usertypes';
-
-interface LayoutContainerProps
-{
-  role: Role,
-}
+import * as Styled from './styles';
 
 const { Header, Sider, Content } = Layout;
 
 const LayoutContainer: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
+
   const navigateTo = useNavigate();
 
-  const auth = isAuthenticated();
+  const { auth, role } = isAuthenticated();
 
-  const menuData = [
-    {
-        key: 'home',
+  const menuData = useMemo(() => {
+    const data = role === Role.Admin ? [
+      {
+          key: 'home',
+          icon: <UserOutlined />,
+          label: 'Patients Records',
+      },
+    ] : [
+      {
+        key: 'user-home',
         icon: <UserOutlined />,
         label: 'My Records',
-    },
-  ];
+      },
+    ];
+
+    return data;
+  }, [role]);
 
   const {
     token: { colorBgContainer },
@@ -49,8 +56,8 @@ const LayoutContainer: React.FC = () => {
             title='Life Care'
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['home']}
-            items={menuData}
+            defaultSelectedKeys={ role === Role.Admin ? ['home'] : ['user-home']}
+            items={menuData || []}
             onClick = {({key}) => {
               return navigateTo(`/${key}`);
             }}
@@ -71,7 +78,9 @@ const LayoutContainer: React.FC = () => {
               />
               <>
                 <Title style={{ marginTop: '1rem'}} level={4}>
-                  {getName()}
+                  <Styled.TitleContainer>
+                    {getName()}
+                  </Styled.TitleContainer>
                 </Title>
               </>
             </div>

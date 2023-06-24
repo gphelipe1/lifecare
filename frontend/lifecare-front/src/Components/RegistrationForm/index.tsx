@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
 import { Form, Input } from 'antd';
 import { cpf } from 'cpf-cnpj-validator';
 
@@ -6,26 +7,29 @@ import * as Styled from './styles';
 import { UserTypes } from '../../Types';
 import { signUp } from '../../Services/auth';
 import { useNavigate } from 'react-router-dom';
+import { NotificationPopup } from '..';
 interface RegistrationFormProps {
     setAuthMode: React.Dispatch<React.SetStateAction<UserTypes.AuthMode>>
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps>= ({ setAuthMode }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [loading, setLoading] = useState<boolean>(false);
+
   const navigateTo = useNavigate();
 
   const onFinish = async (values: any) => {
-    const data =
-    {
-        'username': values.cpf,
-        'name': values.name,
-        'password': values.password
-    };
-    const response = await signUp(data);
+    setLoading(true);
+    const response = await signUp(values);
+
     if(response.has_error){
+        NotificationPopup('Registration Failed', 'error');
+        setLoading(false);
         return;
     }
+
+    setLoading(false);
     navigateTo('/home');
+    NotificationPopup('User Created', 'success');
   }
 
   const normalizeCPF = (value: string) => {
@@ -35,17 +39,21 @@ const RegistrationForm: React.FC<RegistrationFormProps>= ({ setAuthMode }) => {
 
   const validateCPF = (_: any, value: string) => {
     const isValid = cpf.isValid(value);
+  
     if (!isValid) {
       return Promise.reject();
     }
+  
     return Promise.resolve();
   };
 
   const validateName = (_: any, value: string) => {
     const regex = /^[A-Za-z\s]+$/;
+  
     if (!regex.test(value)) {
       return Promise.reject('Invalid name');
     }
+  
     return Promise.resolve();
   };
 
@@ -56,7 +64,7 @@ const RegistrationForm: React.FC<RegistrationFormProps>= ({ setAuthMode }) => {
       onFinish={onFinish}
     >
       <Form.Item
-        name="cpf"
+        name="username"
         rules={[{
             required: true,
             validator: validateCPF,
@@ -90,7 +98,7 @@ const RegistrationForm: React.FC<RegistrationFormProps>= ({ setAuthMode }) => {
       </Form.Item>
 
       <Styled.FormItem>
-        <Styled.FormButton type="primary" htmlType="submit">
+        <Styled.FormButton loading={loading} type="primary" htmlType="submit">
             Register
         </Styled.FormButton>
         <>

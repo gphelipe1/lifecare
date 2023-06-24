@@ -5,5 +5,5 @@ export type Record = {
     phone: string,
     address?: string,
     description?: string,
-    imageFile?: string,
+    imageFile?: FormData,
 }

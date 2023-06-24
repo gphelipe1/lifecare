@@ -10,5 +10,6 @@ namespace lifecare.Repositories
         List<Record> GetAll();
         List<Record> GetById(int id);
         List<Record> GetByCPF(string cpf);
+        Record? GetByUserAndRecord(string cpf, int recordId);
     }
 }

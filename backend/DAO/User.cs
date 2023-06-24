@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using lifecare.Helpers;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,11 @@ namespace lifecare.DAO
         public string Username { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
+        
+        public string? ProfileImage { get; set;}
+        
+        [NotMapped]
+        public IFormFile? ImageFile {get; set;}
 
         [Required]
         [JsonIgnore]

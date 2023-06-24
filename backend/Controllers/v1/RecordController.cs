@@ -31,7 +31,7 @@ namespace lifecare.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
@@ -46,7 +46,7 @@ namespace lifecare.Controllers
 
             } catch(Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
             
         }
@@ -62,7 +62,7 @@ namespace lifecare.Controllers
 
             } catch(Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
             
         }
@@ -78,7 +78,7 @@ namespace lifecare.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
@@ -93,7 +93,7 @@ namespace lifecare.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
@@ -108,7 +108,7 @@ namespace lifecare.Controllers
 
             } catch(Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
     }
