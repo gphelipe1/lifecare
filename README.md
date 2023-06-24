@@ -24,7 +24,7 @@ The backend was built using .NET Core version 7
 - While running the backend, you can now consume all the API data through the frontend of the application. Go to frontend/lifecare-front folter and just run the following commands:
 ```sh
 npm install
-npm start
+npm run dev
 ```
 ### [Tip] - How to Run MySql in a Docker Container (Step by Step) 
 Use docker to run the database. 
