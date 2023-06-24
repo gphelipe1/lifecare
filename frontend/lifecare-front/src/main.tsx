@@ -9,33 +9,36 @@ import {
 
 import './index.css'
 import { ErrorComponent } from './Components/index.tsx';
-import { AdminHome, Login, RecordDetail, UserHome } from './Pages';
+import {
+  AdminHome,
+  Login,
+  UserHome } from './Pages';
 import { Role } from './Types/Usertypes.ts';
 import PrivateRoute from './privateRoute.tsx';
+import { isAuthenticated } from './Services/auth.ts';
+
+const { auth, role } = isAuthenticated();
 
 const router = createBrowserRouter([
   {
+    path: "",
+    element: <Navigate to={!auth ? "/login" : role === Role.Admin ? "/home" : "/user-home" } /> 
+  },
+  {
     path: "/",
     element: <PrivateRoute roleRequired={Role.Admin} />,
+    errorElement: <ErrorComponent />,
     children:[
         {
           path: "/home",
           element: <AdminHome />,
-        },
-        {
-          path: "/new-admin",
-          element: <div></div>,
-        },
-        {
-          path: "*",
-          element: <Navigate to="/" />
-        },
+        }
     ],
-    errorElement: <ErrorComponent />
   },
   {
-    path: "",
+    path: "/",
     element: <PrivateRoute roleRequired={Role.User} />,
+    errorElement: <ErrorComponent />,
     children: [
       {
         path: "/user-home",
@@ -45,12 +48,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login/>
+    element: <Login/>,
   },
   {
     path: "*",
-    element: <Navigate to="/login" />
-  },
+    element: <ErrorComponent />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

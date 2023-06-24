@@ -9,5 +9,6 @@ namespace lifecare.Repositories
         User? GetById(int id);
         User Update(User user);
         User SaveUserFile(string filename, string username);
+        User RemoveUserFile(string username);
     }
 }

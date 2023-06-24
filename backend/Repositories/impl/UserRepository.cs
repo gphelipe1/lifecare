@@ -54,5 +54,22 @@ namespace lifecare.Repositories
             }
             
         }
+
+        public User RemoveUserFile(string username)
+        {
+            var user = _context.Users.First(u => u.Username == username);
+            var userCopy = user;
+            if (user != null)
+            {
+                user.ProfileImage = null;
+
+                _context.Users.Update(user);
+                _context.SaveChanges();
+
+                return userCopy;
+            } else {
+                throw new DbUpdateException("Could not update the data");
+            }
+        }
     }
 }

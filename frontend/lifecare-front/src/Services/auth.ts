@@ -84,9 +84,10 @@ export async function signIn(valueForm: { username: string, password: string }):
 
 export async function signUp(valueForm: { username: string, name: string, password: string }): Promise<any> {
   try {
+    valueForm.username = valueForm.username.replace(/\D/g, '');
     const response = await api.post('user/signup', valueForm);
 
-    return response.status;
+    return response;
   } catch (err) {
     return {
       has_error: true,

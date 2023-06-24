@@ -112,7 +112,7 @@ namespace lifecare.Services
             return createdUser;
             
         }
-        public User AdminRegistration(UserRequestDTO userParam)
+        public User AdminRegistration(UserRegistrationDTO userParam)
         {
             var user = new User{
                 Role = UserRoles.Admin,
@@ -164,6 +164,14 @@ namespace lifecare.Services
         public UserDTO SaveUserFile(string filename, string username)
         {
             var user = _repository.SaveUserFile(filename, username);
+            var userDto = _mapper.Map<UserDTO>(user);
+
+            return userDto;
+        }
+
+        public UserDTO RemoveUserFile(string username)
+        {
+            var user = _repository.RemoveUserFile(username);
             var userDto = _mapper.Map<UserDTO>(user);
 
             return userDto;

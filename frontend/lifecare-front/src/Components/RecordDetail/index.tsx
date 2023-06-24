@@ -1,8 +1,7 @@
 import { Avatar, Descriptions } from "antd";
 import { RecordType } from "../../Types";
-import { UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { getUserRecordDetail } from "../../Services/userService";
+import { getUserFile, getUserRecordDetail } from "../../Services/userService";
 
 interface RecordDetailProps 
 {
@@ -10,33 +9,28 @@ interface RecordDetailProps
 }
 
 const RecordDetail: React.FC<RecordDetailProps> = ({ recordId }) => {
-
     const [recordDetail, setRecordDetail] = useState<RecordType.Record>();
-
-    const getRecord = async (recordId: number) => {
-        const response = await getUserRecordDetail(recordId);
-
-        if(response.has_error){
-            return;
-        }
-        
-        setRecordDetail(response);
-        return;
-
-    
-    }
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     useEffect(() => {
-        getRecord(recordId);
-    }, []);
+        const fetchData = async () => {
+          const response = await getUserRecordDetail(recordId);
+          setRecordDetail(response);
+    
+          const url = await getUserFile();
+          setImageUrl(url);
+        };
+    
+        fetchData();
+    }, [recordId]);
 
     return (
         <div style={{
             display: 'grid',
-            gridTemplateColumns: 'auto auto',
-            columnGap: '1rem',
+            gridTemplateRows: 'auto auto',
+            gap: '1rem',
         }}>
-            <Avatar style={{ alignSelf: 'center' }} size={64} icon={<UserOutlined />}/>
+            {imageUrl && <Avatar style={{ alignSelf: 'center' }} src={<img src={imageUrl} alt="Profile" />} size={80}/>}
             <Descriptions>
                 <Descriptions.Item label="Record Id ">{recordDetail?.id}</Descriptions.Item>
                 <Descriptions.Item label="Name">{recordDetail?.name}</Descriptions.Item>

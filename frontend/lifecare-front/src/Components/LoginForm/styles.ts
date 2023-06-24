@@ -17,7 +17,7 @@ export const FormItem = styled(Form.Item)`
 `;
 
 export const FormButton = styled(Button)`
-    width: 80px;
+    max-width: 100px;
 `;
 
 export const Container = styled.div`

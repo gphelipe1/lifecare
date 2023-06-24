@@ -3,7 +3,6 @@ import { useState, useMemo } from 'react';
 import { Button, Layout, Menu, theme } from 'antd';
 
 import {
-  FileAddOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -13,17 +12,17 @@ import {  Navigate, Outlet, useNavigate } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
 import { getName, isAuthenticated, logout } from '../../Services/auth';
 import { Role } from '../../Types/Usertypes';
+import * as Styled from './styles';
 
 const { Header, Sider, Content } = Layout;
 
 const LayoutContainer: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
+
   const navigateTo = useNavigate();
 
   const { auth, role } = isAuthenticated();
-
-  console.log(role);
 
   const menuData = useMemo(() => {
     const data = role === Role.Admin ? [
@@ -31,11 +30,6 @@ const LayoutContainer: React.FC = () => {
           key: 'home',
           icon: <UserOutlined />,
           label: 'Patients Records',
-      },
-      {
-        key: 'new-admin',
-        icon: <FileAddOutlined />,
-        label: 'New Admin',
       },
     ] : [
       {
@@ -84,7 +78,9 @@ const LayoutContainer: React.FC = () => {
               />
               <>
                 <Title style={{ marginTop: '1rem'}} level={4}>
-                  {getName()}
+                  <Styled.TitleContainer>
+                    {getName()}
+                  </Styled.TitleContainer>
                 </Title>
               </>
             </div>
