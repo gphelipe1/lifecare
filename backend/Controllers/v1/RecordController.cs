@@ -27,7 +27,7 @@ namespace lifecare.Controllers
             try
             {
                 var record = _service.Create(recordDTO);
-                return record;
+                return Ok(record);
             }
             catch(Exception e)
             {
@@ -42,7 +42,7 @@ namespace lifecare.Controllers
             try {
 
             var record = _service.Update(recordDTO);
-            return record;
+            return Ok(record);
 
             } catch(Exception e)
             {
@@ -58,7 +58,7 @@ namespace lifecare.Controllers
             try {
 
             var record = _service.Delete(id);
-            return record;
+            return Ok(record);
 
             } catch(Exception e)
             {
@@ -104,7 +104,7 @@ namespace lifecare.Controllers
             try {
 
             var record = _service.GetByCPF(cpf);
-            return record;
+            return Ok(record);
 
             } catch(Exception e)
             {

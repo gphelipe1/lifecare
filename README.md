@@ -14,12 +14,22 @@ The database uses MySQL and to have access to it, just add the properly string c
  The program creates a default user to have access to it. You can just use "admin"/"admin" to login.
 ## [Backend]
 - To run the backend of the aplication, simply run the commands below in the "backend" file.
+We are using Entity Framework, so first you need to update the database using the command: 
+```sh
+dotnet ef update database
+``` 
+Than you can execute:
 ```sh
 dotnet build
 dotnet run
 ```
 The backend was built using .NET Core version 7
 
+## [Unit Testing]
+For unit testing, we used Xunit. You can find the basic controller tests in the "backendTests" folder. To run them, simply open the terminal in the specified folder and execute: 
+```sh
+dotnet test
+```
 ## [Frontend]
 - While running the backend, you can now consume all the API data through the frontend of the application. Go to frontend/lifecare-front folter and just run the following commands:
 ```sh

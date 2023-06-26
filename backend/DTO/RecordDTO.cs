@@ -13,10 +13,11 @@ namespace lifecare.DTO {
 
         public string? Description { get; set; }
         
-        public RecordDTO(string Name, string CPF, string Phone, string? Address) {
+        public RecordDTO(string Name, string CPF, string Phone, string? Description, string? Address) {
             this.Name = Name;
             this.CPF = CPF;
             this.Phone = Phone;
+            this.Description = Description;
             this.Address = Address;
         }    
     }
